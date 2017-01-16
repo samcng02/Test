@@ -1,0 +1,14 @@
+//ltrim
+function ltrim(text){
+    return text.replace(/^\s+/,"");
+}
+
+//rtrim
+function rtrim(text){
+    return text.replace(/\s+$/,"");
+}
+
+//trim
+function trim(text){
+    return text.replace(/^\s+|\s+$/g,"");
+}
