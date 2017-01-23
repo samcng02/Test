@@ -11,7 +11,7 @@ namespace TestTable
     public class Class1
     {        
         //inner joint
-        public static DataTable JoinTable2(DataTable leftTable, DataTable rightTable)
+        public static DataTable JoinTable(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Clone();
             resultTable.Columns.Add("age");     
@@ -36,7 +36,7 @@ namespace TestTable
         }
 
         //left join
-        public static DataTable LeftJoinTable2(DataTable leftTable, DataTable rightTable)
+        public static DataTable LeftJoinTable(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Copy();
             resultTable.Columns.Add("age");
@@ -56,7 +56,7 @@ namespace TestTable
         }
 
         //right join
-        public static DataTable RightJoinTable2(DataTable leftTable, DataTable rightTable)
+        public static DataTable RightJoinTable(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = rightTable.Copy();
             resultTable.Columns.Add("name");
@@ -91,6 +91,16 @@ namespace TestTable
             }
             return dtDes;
         }
+        
+        //merge
+        public static DataTable Merge(DataTable leftTable, DataTable rightTable)
+        {
+            DataTable resultTable = leftTable.Copy();
+            leftTable.PrimaryKey = new DataColumn[1] { leftTable.Columns["id"] };
+            rightTable.PrimaryKey = new DataColumn[1] { rightTable.Columns["id"] };
+            resultTable.Merge(rightTable);
+            return resultTable;
+        }
 
         public static void Main()
         {
@@ -112,9 +122,9 @@ namespace TestTable
 
             //test
             DataTable rs = new DataTable();
-            rs = JoinTable2(table1, table2);
-            rs = LeftJoinTable2(table1, table2);
-            rs = RightJoinTable2(table1, table2);
+            rs = JoinTable(table1, table2);
+            rs = LeftJoinTable(table1, table2);
+            rs = RightJoinTable(table1, table2);
         }
     }
 }
