@@ -74,6 +74,23 @@ namespace TestTable
             }
             return resultTable;
         }
+        
+        //filter
+        public static DataTable Filter(DataTable dt, string filter)
+        {
+            DataTable dtDes = dt.Clone();
+            DataRow[] drs=  dt.Select(filter);
+
+            for (int i = 0; i < drs.Length; i++)
+            {
+                DataRow dr = dtDes.NewRow();
+                for (int j = 0; j < drs[i].ItemArray.Length; j++)
+                    dr[j] = drs[i].ItemArray[j];
+
+                dtDes.Rows.Add(dr);
+            }
+            return dtDes;
+        }
 
         public static void Main()
         {
