@@ -9,17 +9,8 @@ using System.Collections;
 namespace TestTable
 {
     public class Class1
-    {
-        public static DataTable JoinTable1(DataTable leftTable, DataTable rightTable)
-        {
-            DataTable resultTable = leftTable.Copy();
-            //leftTable.PrimaryKey = new DataColumn[1] { leftTable.Columns["id"] };
-            //rightTable.PrimaryKey = new DataColumn[1] { rightTable.Columns["id"] };
-            resultTable.Merge(rightTable);
-            return resultTable;
-        }
-
-        
+    {        
+        //inner joint
         public static DataTable JoinTable2(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Clone();
@@ -31,11 +22,12 @@ namespace TestTable
                 {
                     if (rowLeftTable["id"] == rowRightTable["id"])
                     {
-                        DataRow dr = resultTable.NewRow();
+                        DataRow dr = resultTable.NewRow();  //new row each time
                         dr["id"] = rowLeftTable["id"];
                         dr["name"] = rowLeftTable["name"];
                         dr["age"] = rowRightTable["age"];
 
+                        //add row
                         resultTable.Rows.Add(dr);
                     }
                 }
@@ -43,6 +35,7 @@ namespace TestTable
             return resultTable;
         }
 
+        //left join
         public static DataTable LeftJoinTable2(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Copy();
@@ -62,6 +55,7 @@ namespace TestTable
             return resultTable;
         }
 
+        //right join
         public static DataTable RightJoinTable2(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = rightTable.Copy();
@@ -86,19 +80,20 @@ namespace TestTable
             DataTable table1 = new DataTable();
             table1.Columns.Add("id");
             table1.Columns.Add("name");
-
-            DataTable table2 = new DataTable();
-            table2.Columns.Add("id");
-            table2.Columns.Add("age");
-
+            //add col
             table1.Rows.Add("01", "sang");
             table1.Rows.Add("02", "suong");
             table1.Rows.Add("03", "oanh");
 
+            DataTable table2 = new DataTable();
+            table2.Columns.Add("id");
+            table2.Columns.Add("age");
+            //add col
             table2.Rows.Add("01", "20");
             table2.Rows.Add("02", "30");
             table2.Rows.Add("04", "50");
 
+            //test
             DataTable rs = new DataTable();
             rs = JoinTable2(table1, table2);
             rs = LeftJoinTable2(table1, table2);
