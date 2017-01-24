@@ -1,20 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 using System.Collections;
+//
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TestTable
 {
     public class Class1
-    {        
-        //inner joint
+    {
         public static DataTable JoinTable(DataTable leftTable, DataTable rightTable)
         {
-            DataTable resultTable = leftTable.Clone();
-            resultTable.Columns.Add("age");     
+            var resultTable = leftTable.Clone();
+            resultTable.Columns.Add("age");
 
             foreach (DataRow rowLeftTable in leftTable.Rows)
             {
@@ -22,12 +22,11 @@ namespace TestTable
                 {
                     if (rowLeftTable["id"] == rowRightTable["id"])
                     {
-                        DataRow dr = resultTable.NewRow();  //new row each time
+                        var dr = resultTable.NewRow();
                         dr["id"] = rowLeftTable["id"];
                         dr["name"] = rowLeftTable["name"];
                         dr["age"] = rowRightTable["age"];
 
-                        //add row
                         resultTable.Rows.Add(dr);
                     }
                 }
@@ -35,7 +34,6 @@ namespace TestTable
             return resultTable;
         }
 
-        //left join
         public static DataTable LeftJoinTable(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Copy();
@@ -55,7 +53,6 @@ namespace TestTable
             return resultTable;
         }
 
-        //right join
         public static DataTable RightJoinTable(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = rightTable.Copy();
@@ -74,25 +71,38 @@ namespace TestTable
             }
             return resultTable;
         }
-        
-        //filter
-        public static DataTable Filter(DataTable dt, string filter)
+
+        public static DataTable AddMultiCol()
         {
-            DataTable dtDes = dt.Clone();
-            DataRow[] drs=  dt.Select(filter);
-
-            for (int i = 0; i < drs.Length; i++)
-            {
-                DataRow dr = dtDes.NewRow();
-                for (int j = 0; j < drs[i].ItemArray.Length; j++)
-                    dr[j] = drs[i].ItemArray[j];
-
-                dtDes.Rows.Add(dr);
-            }
+            DataTable dtDes = new DataTable();
+            dtDes.Columns.AddRange(new DataColumn[]{
+                new DataColumn("id"),
+                new DataColumn("name"),
+                new DataColumn("age")
+            });
             return dtDes;
         }
-        
-        //merge
+
+        public static DataTable Filter(DataTable dt, string filter)
+        {
+            //v2.0
+                DataTable dtDes = dt.Clone();
+                DataRow[] drs = dt.Select(filter);
+
+                foreach(var dr in drs)
+                {
+                    dtDes.ImportRow(dr);
+                }
+                return dtDes;
+            //
+
+            //v4.0
+                //return dt.Select(filter).CopyToDataTable();
+        }
+
+        //merge 2 table
+        //if primaryKey is defined, line same by id then result is 1 row
+        //result is join + left join + right join
         public static DataTable Merge(DataTable leftTable, DataTable rightTable)
         {
             DataTable resultTable = leftTable.Copy();
@@ -104,27 +114,33 @@ namespace TestTable
 
         public static void Main()
         {
+            //----------create data test--------------------
             DataTable table1 = new DataTable();
             table1.Columns.Add("id");
             table1.Columns.Add("name");
-            //add col
-            table1.Rows.Add("01", "sang");
-            table1.Rows.Add("02", "suong");
-            table1.Rows.Add("03", "oanh");
 
             DataTable table2 = new DataTable();
             table2.Columns.Add("id");
             table2.Columns.Add("age");
-            //add col
+
+            table1.Rows.Add("01", "sang");
+            table1.Rows.Add("02", "suong");
+            table1.Rows.Add("03", "oanh");
+
             table2.Rows.Add("01", "20");
             table2.Rows.Add("02", "30");
             table2.Rows.Add("04", "50");
+            //--------------------------------------------------
 
-            //test
             DataTable rs = new DataTable();
-            rs = JoinTable(table1, table2);
-            rs = LeftJoinTable(table1, table2);
-            rs = RightJoinTable(table1, table2);
+            rs = Merge(table1, table2);
+            //rs = JoinTable(table1, table2);
+            // rs = LeftJoinTable(table1, table2);
+            // rs = RightJoinTable(table1, table2);
+            // rs = AddMultiCol();  
+            //rs = Filter(rs, "id=01 or id=03");
+
+            Console.Read();
         }
     }
 }
