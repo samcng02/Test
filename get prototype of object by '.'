@@ -1,0 +1,19 @@
+//get prototype of object by '.' 
+function getObjectValueFromPropertyStringWithDot(obj, field) {
+  var result;
+  if (field.indexOf('.') === -1) {
+      result = obj[field];
+  } else {
+      result = field.split('.').reduce(function(a, b){
+          return obj[a] ? obj[a][b] : a[b];
+      });
+  }
+  return result;
+}
+
+//test
+var obj = {a:{b:{c:{d:{e:{f:1111}}}}}};
+var field = 'a.b';
+var rs = getObjectValueFromPropertyStringWithDot(obj, field);  // obj['a']['b']
+
+
