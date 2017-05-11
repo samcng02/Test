@@ -12,3 +12,14 @@ function rtrim(text){
 function trim(text){
     return text.replace(/^\s+|\s+$/g,"");
 }
+
+//array.include
+var include = Array.prototype.indexOf ?
+    function(arr, obj) { 
+        return arr.indexOf(obj) !== -1; 
+    } :
+    function(arr, obj) {
+        for(var i = -1, len = arr.length; ++i < len;)
+            if(arr[i] === obj) return true;
+        return false;
+    };
